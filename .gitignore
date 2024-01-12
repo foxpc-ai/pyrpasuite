@@ -1,0 +1,5 @@
+**/__pycache__/
+processtest.py
+dist
+pyrpasuite.egg-info
+build
