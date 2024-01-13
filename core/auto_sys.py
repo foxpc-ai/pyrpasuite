@@ -6,6 +6,7 @@ import pyautogui
 import glob
 import shutil
 import configparser
+import psutil
 
 
 class AutoSys:
@@ -29,12 +30,12 @@ class AutoSys:
         except Exception as e:
             try:
                 # If subprocess.Popen fails, try AppOpener
-                open(application_name, match_closest=True, output=False)
+                open(application_name, match_closest=True, output=True,throw_error=True)
             except Exception as e:
                 print(f"Failed to open {application_name} with error: {e}")
                 return False
         return True
-
+    
     def click(self, x, y):
         """
         Perform a mouse click at the specified coordinates.
@@ -67,16 +68,39 @@ class AutoSys:
         """
         keyboard.send(keys)
     
-    def print_memory_usage(self):
+    # def print_memory_usage(self):
+    #     """
+    #     Print the current memory usage.
+
+    #     :return: The percentage of memory used and the amount of memory used in GB.
+    #     """
+    #     total_memory, used_memory, _ = map(int, os.popen('free -t -m').readlines()[-1].split()[1:])
+    #     memory_usage = round((used_memory / total_memory) * 100, 2)
+    #     used_memory_gb = used_memory/1024
+    #     return memory_usage,used_memory_gb
+        
+    def get_memory_usage(self):
         """
         Print the current memory usage.
 
         :return: The percentage of memory used and the amount of memory used in GB.
         """
-        total_memory, used_memory, _ = map(int, os.popen('free -t -m').readlines()[-1].split()[1:])
-        memory_usage = round((used_memory / total_memory) * 100, 2)
-        used_memory_gb = used_memory/1024
-        return memory_usage,used_memory_gb
+        try:
+            # Get virtual memory usage info
+            mem_info = psutil.virtual_memory()
+
+            # Total memory in GB
+            total_memory_gb = mem_info.total / (1024.0 ** 3)
+
+            # Used memory in GB
+            used_memory_gb = (mem_info.total - mem_info.available) / (1024.0 ** 3)
+
+            # Memory usage percentage
+            memory_usage_percentage = mem_info.percent
+
+            return memory_usage_percentage, used_memory_gb
+        except Exception as e:
+            return f"An error occurred: {str(e)}"
     
     def get_files(self,directory,identifier):
         """
@@ -100,7 +124,7 @@ class AutoSys:
         output, error = process.communicate()
         return output
     
-    def move_file(self,source_path,destination_path):
+    def move_file(self,source_path:str,destination_path:str):
         """
         Move a file from one location to another.
 
@@ -109,7 +133,7 @@ class AutoSys:
         """
         shutil.move(source_path,destination_path)
     
-    def copy_file(self,source_path,destination_path):
+    def copy_file(self,source_path:str,destination_path:str):
         """
         Copy a file from one location to another.
 
@@ -118,7 +142,7 @@ class AutoSys:
         """
         shutil.copy2(source_path,destination_path)
     
-    def for_each_file_in_folder(path, subdirectory=False, identifier=None):
+    def for_each_file_in_folder(self,path:str, subdirectory:bool=False, identifier=None):
         """
         Yield each file in a folder.
 

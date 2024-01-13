@@ -82,17 +82,6 @@ class AutoEmailSender:
         server.quit()
 
 
-
-import smtplib
-import imaplib
-import email
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email import encoders
-from email.header import decode_header
-import os
-
 class AutoEmailReader:
     """
     A class to automate email reading operations.
@@ -106,11 +95,6 @@ class AutoEmailReader:
     def __init__(self, imap_server: str, imap_port: int, email: str, password: str):
         """
         Initialize AutoEmailReader with the necessary credentials.
-
-        :param imap_server: The IMAP server to use.
-        :param imap_port: The port to use for the IMAP server.
-        :param email: The email address to use.
-        :param password: The password for the email account.
         """
         self.imap_server = imap_server
         self.imap_port = imap_port
