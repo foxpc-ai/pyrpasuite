@@ -1,11 +1,14 @@
 from netmiko import ConnectHandler
 
+
 class AutoNet:
     """
     A class to automate network operations.
     """
 
-    def __init__(self, device_type: str, ip: str, username: str, password: str, secret: str):
+    def __init__(
+        self, device_type: str, ip: str, username: str, password: str, secret: str
+    ):
         """
         Initialize AutoNet with the necessary credentials.
 
@@ -15,7 +18,13 @@ class AutoNet:
         :param password: The password for authentication.
         :param secret: The secret for authentication.
         """
-        self.connection = ConnectHandler(device_type=device_type, ip=ip, username=username, password=password, secret=secret)
+        self.connection = ConnectHandler(
+            device_type=device_type,
+            ip=ip,
+            username=username,
+            password=password,
+            secret=secret,
+        )
 
     def send_command(self, command: str) -> str:
         """
@@ -45,13 +54,13 @@ class AutoNet:
         """
         Disable paging on the device.
         """
-        self.connection.send_command('terminal length 0')
+        self.connection.send_command("terminal length 0")
 
     def enable_paging(self) -> None:
         """
         Enable paging on the device.
         """
-        self.connection.send_command('terminal length 30')
+        self.connection.send_command("terminal length 30")
 
     def is_alive(self) -> bool:
         """

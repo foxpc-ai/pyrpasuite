@@ -8,6 +8,7 @@ from email import encoders
 from email.header import decode_header
 import os
 
+
 class AutoEmailSender:
     """
     A class to automate email operations.
@@ -33,10 +34,10 @@ class AutoEmailSender:
         :param body: The body of the email.
         """
         msg = MIMEMultipart()
-        msg['From'] = self.email
-        msg['To'] = to_email
-        msg['Subject'] = subject
-        msg.attach(MIMEText(body, 'plain'))
+        msg["From"] = self.email
+        msg["To"] = to_email
+        msg["Subject"] = subject
+        msg.attach(MIMEText(body, "plain"))
 
         server = smtplib.SMTP(self.smtp_server, self.smtp_port)
         server.starttls()
@@ -45,7 +46,9 @@ class AutoEmailSender:
         server.sendmail(self.email, to_email, text)
         server.quit()
 
-    def send_email_with_attachment(self, to_email: str, subject: str, body: str, file_path: str) -> None:
+    def send_email_with_attachment(
+        self, to_email: str, subject: str, body: str, file_path: str
+    ) -> None:
         """
         Send an email with an attachment.
 
@@ -55,23 +58,23 @@ class AutoEmailSender:
         :param file_path: The path of the file to attach.
         """
         msg = MIMEMultipart()
-        msg['From'] = self.email
-        msg['To'] = to_email
-        msg['Subject'] = subject
+        msg["From"] = self.email
+        msg["To"] = to_email
+        msg["Subject"] = subject
 
-        msg.attach(MIMEText(body, 'plain'))
+        msg.attach(MIMEText(body, "plain"))
 
         # Open the file in bynary mode
         binary_file = open(file_path, "rb")
 
-        payload = MIMEBase('application', 'octate-stream', Name=file_path)
+        payload = MIMEBase("application", "octate-stream", Name=file_path)
         # To change the payload into encoded form
         payload.set_payload((binary_file).read())
         # enconding the binary into base64
         encoders.encode_base64(payload)
 
         # add header with pdf name
-        payload.add_header('Content-Decomposition', 'attachment', filename=file_path)
+        payload.add_header("Content-Decomposition", "attachment", filename=file_path)
         msg.attach(payload)
 
         server = smtplib.SMTP(self.smtp_server, self.smtp_port)
@@ -100,8 +103,13 @@ class AutoEmailReader:
         self.imap_port = imap_port
         self.email = email
         self.password = password
-    
-    def read_email(self, mailbox: str = 'inbox', email_filter: str = 'ALL', attachment_path: str = r'C:\Users') -> tuple:
+
+    def read_email(
+        self,
+        mailbox: str = "inbox",
+        email_filter: str = "ALL",
+        attachment_path: str = r"C:\Users",
+    ) -> tuple:
         """
         Read an email.
 
@@ -121,21 +129,21 @@ class AutoEmailReader:
             imap.select(mailbox)
 
             # Search for specific mail
-            res, msg_ids = imap.uid('search', None, email_filter)
+            res, msg_ids = imap.uid("search", None, email_filter)
             # If the email is not found, inform the user
             if not msg_ids[0]:
                 return "No emails found."
             else:
                 msg_id_list = msg_ids[0].split()
-                latest_email_id = msg_id_list[-1] # get the latest
+                latest_email_id = msg_id_list[-1]  # get the latest
 
                 # Fetch the email body (RFC822) for the given ID
-                result, email_data = imap.uid('fetch', latest_email_id, '(BODY.PEEK[])')
+                result, email_data = imap.uid("fetch", latest_email_id, "(BODY.PEEK[])")
                 raw_email = email_data[0][1].decode("utf-8")
                 email_message = email.message_from_string(raw_email)
 
                 # Decode email subject
-                subject = decode_header(email_message['Subject'])[0][0]
+                subject = decode_header(email_message["Subject"])[0][0]
                 if isinstance(subject, bytes):
                     # If it's a bytes type, decode to str
                     subject = subject.decode()
@@ -143,7 +151,7 @@ class AutoEmailReader:
                 # Get the email body
                 if email_message.is_multipart():
                     for part in email_message.get_payload():
-                        if part.get_content_type() == 'text/plain':
+                        if part.get_content_type() == "text/plain":
                             body = part.get_payload(decode=True)
                 else:
                     body = email_message.get_payload(decode=True)
@@ -151,23 +159,25 @@ class AutoEmailReader:
                 # Get the attachments
                 attachments = []
                 for part in email_message.walk():
-                    if part.get_content_maintype() == 'multipart':
+                    if part.get_content_maintype() == "multipart":
                         continue
-                    if part.get('Content-Disposition') is None:
+                    if part.get("Content-Disposition") is None:
                         continue
                     fileName = part.get_filename()
 
                     if bool(fileName):
                         filePath = os.path.join(attachment_path, fileName)
-                        with open(filePath, 'wb') as f:
+                        with open(filePath, "wb") as f:
                             f.write(part.get_payload(decode=True))
                         attachments.append(filePath)
 
                 return subject, body, attachments
         finally:
             imap.logout()
-        
-    def filter_emails(self, mailbox: str = 'inbox', search_criterion: str = 'ALL') -> list:
+
+    def filter_emails(
+        self, mailbox: str = "inbox", search_criterion: str = "ALL"
+    ) -> list:
         """
         Filter emails.
 
@@ -186,7 +196,7 @@ class AutoEmailReader:
             imap.select(mailbox)
 
             # Search for specific mail
-            res, msg_ids = imap.uid('search', None, search_criterion)
+            res, msg_ids = imap.uid("search", None, search_criterion)
             # If the email is not found, inform the user
             if not msg_ids[0]:
                 return "No emails found."

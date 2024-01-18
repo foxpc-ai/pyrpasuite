@@ -1,6 +1,7 @@
 import openpyxl
 
-class AutoExcel():
+
+class AutoExcel:
     """
     A class to automate Excel operations using openpyxl.
     """
@@ -82,7 +83,9 @@ class AutoExcel():
         :param value: The value to find.
         :return: A list of cells with the given value.
         """
-        return [cell for row in self.ws.iter_rows() for cell in row if cell.value == value]
+        return [
+            cell for row in self.ws.iter_rows() for cell in row if cell.value == value
+        ]
 
     def save_and_close(self, filename="new_file.xlsm"):
         """

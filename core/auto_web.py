@@ -3,14 +3,14 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
-from selenium.webdriver.support.ui import WebDriverWait,Select
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
 
-class AutoWeb():
+class AutoWeb:
     """
     A class to automate web operations.
     """
@@ -36,7 +36,7 @@ class AutoWeb():
     def open_browser(self, name: str, url: str) -> None:
         """
         Opens the browser using selenium library. Supports chrome and firefox. Handles webdrivers installation.
-        
+
         :param name: Name of the browser to open.
         :param url: The url on which the browser should open.
         """
@@ -93,7 +93,9 @@ class AutoWeb():
             element.clear()
             element.send_keys(text)
 
-    def wait_for_element(self, locator: str, locator_strategy: str = "NAME", timeout: int = 30):
+    def wait_for_element(
+        self, locator: str, locator_strategy: str = "NAME", timeout: int = 30
+    ):
         """
         Wait for an element to be present.
 
@@ -234,7 +236,7 @@ class AutoWebAdvanced(AutoWeb):
         Switch to an alert.
         """
         return self.browser.switch_to.alert
-    
+
     def handle_alert(self, action="accept"):
         """
         Handle an alert.
@@ -501,4 +503,3 @@ class AutoWebAdvanced(AutoWeb):
         with open(path, "w") as f:
             f.write(html)
             f.close()
-            

@@ -1,7 +1,8 @@
 import pypdfium2 as pdfium
 from pypdf2 import PdfMerger
 
-class AutoPdf():
+
+class AutoPdf:
     """
     A class to automate PDF operations.
     """
@@ -18,7 +19,7 @@ class AutoPdf():
         """
         self.file = pdfium.PdfDocument(Path)
         return self.file
-    
+
     def page_count(self, file: pdfium.PdfDocument) -> int:
         """
         Get the number of pages in a PDF file.
@@ -28,7 +29,7 @@ class AutoPdf():
         """
         page_count = len(file)
         return page_count
-    
+
     def pdf_page_to_img(self, file: pdfium.PdfDocument) -> None:
         """
         Convert each page of a PDF file to an image.
@@ -38,13 +39,12 @@ class AutoPdf():
         n_pages = len(file)
         for page_number in range(n_pages):
             page = file.get_page(page_number)
-            
+
             pil_image = page.render(
                 scale=1,
                 rotation=0,
             ).to_pil()
             pil_image.save(f"image_{page_number+1}.png")
-    
 
     def split_pages(self, file: pdfium.PdfDocument) -> None:
         """
@@ -54,10 +54,8 @@ class AutoPdf():
         """
         n_pages = len(file)
         for page_number in range(n_pages):
-            page =file.get_page(page_number)
-
-            page.save(f"pdf_{page_number+1}.pdf",version=17)
-    
+            page = file.get_page(page_number)
+            page.save(f"pdf_{page_number+1}.pdf", version=17)
 
     def merge_pdf(self, files: list) -> None:
         """
@@ -67,9 +65,9 @@ class AutoPdf():
         """
         merger = PdfMerger()
         for file in files:
-            merger.append(open(file,'rb'))
-        merger.write('merged.pdf')
-    
+            merger.append(open(file, "rb"))
+        merger.write("merged.pdf")
+
     def rotate_pdf(self, file: pdfium.PdfDocument) -> None:
         """
         Rotate a PDF file.
