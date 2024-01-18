@@ -1,7 +1,6 @@
 import subprocess
 import os
 from AppOpener import open
-import keyboard
 import pyautogui
 import glob
 import shutil
@@ -51,7 +50,7 @@ class AutoSys:
 
         :param text: The text to type.
         """
-        keyboard.write(text=text)
+        pyautogui.typewrite(text)
 
     def close_application(self):
         """
@@ -63,10 +62,11 @@ class AutoSys:
     def send_hotkey(self, *keys):
         """
         Sends a hotkey (or sequence of keys) to the active window.
+        Example: AutoSys.send_hotkey('win','d')
 
         :param keys: A sequence of keys to be pressed together.
         """
-        keyboard.send(keys)
+        pyautogui.hotkey(keys)
     
     # def print_memory_usage(self):
     #     """

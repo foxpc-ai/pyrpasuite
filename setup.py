@@ -10,7 +10,7 @@ with open(this_directory / 'requirements.txt',encoding='utf-16') as f:
 
 setup(
     name='pyrpasuite',  
-    version='0.0.1',  
+    version='0.0.2',  
     author='Muktadir',  
     long_description=long_description,
     long_description_content_type='text/markdown',
